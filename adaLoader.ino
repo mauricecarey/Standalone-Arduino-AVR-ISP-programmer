@@ -143,9 +143,10 @@ void loop (void) {
 
 void error(char *string) { 
   Serial.println(string); 
-  digitalWrite(LED_ERR, HIGH);  
-  while(1) {
-    tone(PIEZOPIN, 4000, 500);
+  digitalWrite(LED_ERR, HIGH);
+  int i = 10;
+  while(i--) {
+    tone(PIEZOPIN, 1000, 500);
   }
 }
 
