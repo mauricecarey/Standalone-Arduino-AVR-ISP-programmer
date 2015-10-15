@@ -405,8 +405,10 @@ boolean verifyImage (byte *hextext)  {
 
 void eraseChip(void) {
   SPI.setClockDivider(CLOCKSPEED_FUSES); 
-    
+
+  Serial.print("Erasing chip.");
   spi_transaction(0xAC, 0x80, 0, 0);	// chip erase    
+  Serial.print("Waiting...");
   busyWait();
 }
 
@@ -424,11 +426,16 @@ void busyWait(void)  {
  * Functions specific to ISP programming of an AVR
  */
 uint16_t spi_transaction (uint8_t a, uint8_t b, uint8_t c, uint8_t d) {
+  Serial.println("SPI Transaction Begin");
   uint8_t n, m;
-  SPI.transfer(a); 
+  Serial.println("SPI Transfer a");
+  SPI.transfer(a);
+  Serial.println("SPI Transfer b");
   n = SPI.transfer(b);
   //if (n != a) error = -1;
+  Serial.println("SPI Transfer c");
   m = SPI.transfer(c);
+  Serial.println("SPI Transfer d");
   return 0xFFFFFF & ((n<<16)+(m<<8) + SPI.transfer(d));
 }
 

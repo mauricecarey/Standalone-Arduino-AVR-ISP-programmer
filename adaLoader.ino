@@ -85,14 +85,22 @@ void loop (void) {
   
   eraseChip();
 
-  if (! programFuses(targetimage->image_progfuses))	// get fuses ready to program
+  if (! programFuses(targetimage->image_progfuses))	{
+    // get fuses ready to program
     error("Programming Fuses fail");
+  } else {
+    Serial.println("Fuses programmed.");
+  }
+    
   
   if (! verifyFuses(targetimage->image_progfuses, targetimage->fusemask) ) {
     error("Failed to verify fuses");
-  } 
+  } else {
+    Serial.println("Fuses verified.");
+  }
 
   end_pmode();
+  Serial.println("Start pmode");
   start_pmode();
 
   byte *hextext = targetimage->image_hexcode;  
@@ -100,8 +108,10 @@ void loop (void) {
   uint8_t pagesize = pgm_read_byte(&targetimage->image_pagesize);
   uint16_t chipsize = pgm_read_word(&targetimage->chipsize);
         
-  //Serial.println(chipsize, DEC);
+//  Serial.println(chipsize, DEC);
+  Serial.print("Writing pages...");
   while (pageaddr < chipsize) {
+    Serial.print(".");
      byte *hextextpos = readImagePage (hextext, pageaddr, pagesize, pageBuffer);
           
      boolean blankpage = true;
@@ -167,8 +177,10 @@ void start_pmode () {
   delay(50);
   pinMode(MISO, INPUT);
   pinMode(MOSI, OUTPUT);
+  Serial.println("SPI transaction");
   debug("...spi_transaction");
   spi_transaction(0xAC, 0x53, 0x00, 0x00);
+  Serial.println("Done");
   debug("...Done");
   pmode = 1;
 }
