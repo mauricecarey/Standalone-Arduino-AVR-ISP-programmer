@@ -22,7 +22,7 @@
 
 
 #include "optiLoader.h"
-#include "SPI.h"
+#include <SPI.h>
 
 // Global Variables
 int pmode=0;
@@ -90,7 +90,9 @@ void loop (void) {
   
   if (! verifyFuses(targetimage->image_progfuses, targetimage->fusemask) ) {
     error("Failed to verify fuses");
-  } 
+  } else {
+    Serial.println("Verified fuses.");
+  }
 
   end_pmode();
   start_pmode();
@@ -101,6 +103,7 @@ void loop (void) {
   uint16_t chipsize = pgm_read_word(&targetimage->chipsize);
         
   //Serial.println(chipsize, DEC);
+  Serial.println("Writing Flash...");
   while (pageaddr < chipsize) {
      byte *hextextpos = readImagePage (hextext, pageaddr, pagesize, pageBuffer);
           
@@ -117,6 +120,7 @@ void loop (void) {
   }
   
   // Set fuses to 'final' state
+  Serial.println("Setting fuses to final state...");
   if (! programFuses(targetimage->image_normfuses))
     error("Programming Fuses fail");
     
@@ -154,7 +158,8 @@ void start_pmode () {
   pinMode(13, INPUT); // restore to default
 
   SPI.begin();
-  SPI.setClockDivider(SPI_CLOCK_DIV128); 
+  SPI.beginTransaction(SPISettings(8000000, MSBFIRST, SPI_MODE0));
+  SPI.setClockDivider(CLOCKSPEED_FUSES); 
   
   debug("...spi_init done");
   // following delays may not work on all targets...

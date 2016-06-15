@@ -1,6 +1,6 @@
 #include "optiLoader.h"
 
-image_t PROGMEM image_328 = {
+const image_t PROGMEM image_328 = {
     {"adaboot_atmega328.hex"},
     {"atmega328"},
     0x950F,				/* Signature bytes for 328P */
@@ -82,7 +82,7 @@ image_t PROGMEM image_328 = {
 /*
  * Table of defined images
  */
-image_t *images[] = {
+const image_t *images[] = {
   &image_328,
 };
 

@@ -4,7 +4,7 @@
  #include "WProgram.h"
 #endif
 #include <avr/pgmspace.h>
-#include "SPI.h"
+#include <SPI.h>
 
 #ifndef _OPTILOADER_H
 #define _OPTILOADER_H
